@@ -1,0 +1,11 @@
+organize.sh
+-------------------------------------------
+options:
+
+none at this time
+
+execute with:
+
+sh organize.sh
+
+This shell script will move all media/document files in your home directory to the appropriate XDG directory for that filetype, while leaving a symlink behind in order not to break existing references to that file. .
