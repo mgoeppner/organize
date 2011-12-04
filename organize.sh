@@ -15,7 +15,7 @@ declare -a target_folders=( $HOMEDIR "$HOMEDIR/Downloads" )
 declare -a sorted_folders=( "$HOMEDIR/Pictures" "$HOMEDIR/Videos" "$HOMEDIR/Music" "$HOMEDIR/Documents" )
 
 # File types to sort
-declare -a sort_type=( 'gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf' 'mp4;avi' 'mp3;ogg;wav;aac;flac;m4a' 'doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp' )
+declare -a sort_type=( 'gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf' 'mp4;avi;ovg;divx;3g2;3gp;mkv;mov' 'mp3;ogg;wav;aac;flac;m4a' 'doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp' )
 
 # Check if command was successful
 function check_sanity
@@ -57,7 +57,6 @@ function sort_folder
 
 if [ ! -d "$HOMEDIR/Downloads" ]; then
 	mkdir $HOMEDIR/Downloads
-
 fi
 
 for e in "${sorted_folders[@]}"
