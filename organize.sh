@@ -11,7 +11,6 @@ declare -a sort_type=( 'gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf' 'mp4;avi' 'mp3;og
 
 function sort_folder
 {
-	echo "Sorting $2"
 	# what is being sorted this pass
 
 	declare -a exts=($(echo $1 | tr ";" "\n"))
@@ -53,18 +52,16 @@ done
 # change to the current user's home directory
 cd $HOMEDIR
 
-ITERATOR=0
-
 echo "Sorting started..."
-for t in "${sort_type[@]}"
+for f in "${target_folders[@]}"
 do
-
-	for f in "${target_folders[@]}"
+	ITERATOR=0
+	for t in "${sort_type[@]}"
 	do
-		echo $f
 		sort_folder $t $f $ITERATOR
+		ITERATOR=$[ITERATOR+1]
 	done
-	ITERATOR=$[ITERATOR+1]
+	echo $f
 done
 
 echo "Sorting completed!"
