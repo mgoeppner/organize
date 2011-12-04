@@ -2,7 +2,7 @@ organize.sh
 -------------------------------------------
 options:
 
-none at this time
+-n: Do not symlink after moving
 
 execute with:
 

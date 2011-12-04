@@ -45,9 +45,11 @@ function sort_folder
 			check_sanity $ERR_SORT_MOVE
 
 			# Symlink file in original directory
-			echo "Making symlink for $i..."
-			ln -s "${sorted_folders[$3]}"/$(basename $i) $2
-			check_sanity $ERR_SORT_LINK
+			if [ $DO_SYMLINK = true ]; then
+				echo "Making symlink for $i..."
+				ln -s "${sorted_folders[$3]}"/$(basename $i) $2
+				check_sanity $ERR_SORT_LINK
+			fi
 		done
 	done
 }
@@ -73,6 +75,22 @@ done
 
 # change to the current user's home directory
 cd $HOMEDIR
+
+# Parse command line arguments
+DO_SYMLINK=true
+
+while getopts ":n" opt; do
+	case $opt in
+		n)
+			DO_SYMLINK=false >&2
+			echo "Symlinking is off..."
+		;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+		;;
+	esac
+done
 
 echo "Orginization started..."
 
