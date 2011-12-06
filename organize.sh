@@ -4,28 +4,55 @@
 
 HOMEDIR=~
 
-ERR_XDG="XDG directories do not exist and could not be created, please create them and try again"
-ERR_SORT_MOVE="File could not be moved, operation aborted"
-ERR_SORT_LINK="File could not be symlinked, operation aborted"
-
-# Folders to organize
-declare -a target_folders=( $HOMEDIR "$HOMEDIR/Downloads" )
-
-# Folders to sort to
-declare -a sorted_folders=( "$HOMEDIR/Pictures" "$HOMEDIR/Videos" "$HOMEDIR/Music" "$HOMEDIR/Documents" )
-
-# File types to sort
-declare -a sort_type=( 'gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf' 'mp4;avi;ovg;divx;3g2;3gp;mkv;mov' 'mp3;ogg;wav;aac;flac;m4a' 'doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp' )
+# Error messages
+ERR_CONF='Config folder could not be found or created'
+ERR_CONF_FILE='Config file could not be found or created'
+ERR_CONF_LOAD='Config file could not be loaded'
+ERR_XDG='XDG directories do not exist and could not be created, please create them and try again'
+ERR_SORT_MOVE='File could not be moved, operation aborted'
+ERR_SORT_LINK='File could not be symlinked, operation aborted'
 
 # Check if command was successful
 function check_sanity
 {
 	if [ ! "$?" = "0" ]; then
-		echo $1		
+		echo $1
 		exit 1		
 	fi	
 }
 
+# Configuration
+if [ ! -d "$HOMEDIR/.config/organize" ]; then
+	
+	# Make directory
+	mkdir "$HOMEDIR/.config/organize"
+	check_sanity $ERR_CONF
+
+	if [ ! -e "$HOMEDIR/.config/organize/organize.conf" ]; then
+	
+		# Create file
+		touch "$HOMEDIR/.config/organize/organize.conf"
+		check_sanity $ERR_CONF_FILE
+
+		# Write default contents
+		echo -e 'PICTURE_DIR="$HOMEDIR/Pictures"\nVIDEO_DIR="$HOMEDIR/Videos"\nMUSIC_DIR="$HOMEDIR/Music"\nDOCUMENT_DIR="$HOMEDIR/Documents"\n\nPICTURE_TYPES="gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf"\nVIDEO_TYPES="mp4;avi;ovg;divx;3g2;3gp;mkv;mov"\nMUSIC_TYPES="mp3;ogg;wav;aac;flac;m4a"\nDOCUMENT_TYPES="doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp"\n' > "$HOMEDIR/.config/organize/organize.conf"
+		check_sanity $ERR_CONF_FILE	
+	fi				
+fi
+
+source "$HOMEDIR/.config/organize/organize.conf"
+check_sanity $ERR_CONF_LOAD
+
+# Folders to organize
+declare -a target_folders=( $HOMEDIR "$HOMEDIR/Downloads" )
+
+# Folders to sort to
+declare -a sorted_folders=( $PICTURE_DIR $VIDEO_DIR $MUSIC_DIR $DOCUMENT_DIR )
+
+# File types to sort
+declare -a sort_type=( $PICTURE_TYPES $VIDEO_TYPES $MUSIC_TYPES $DOCUMENT_TYPES )
+
+# Sorting function
 function sort_folder
 {
 	# what is being sorted this pass
@@ -34,41 +61,44 @@ function sort_folder
 
 	for c in "${exts[@]}"
 	do
+		# Handle whitespace
+		OLDIFS=$IFS
+		IFS=$(echo -en "\n\b")
+
 		# Get matched files
 		files=($(find $2 -maxdepth 1 -name "*.$c" -type f))
 
+		IFS=$OLDIFS
+		
 		for i in "${files[@]}"
 		do
 			# Move file
-			echo "Moving $i..."
-			mv $i "${sorted_folders[$3]}"
+			echo "Moving $i to ${sorted_folders[$3]}..."
+			mv "$i" "${sorted_folders[$3]}"
 			check_sanity $ERR_SORT_MOVE
 
 			# Symlink file in original directory
 			if [ $DO_SYMLINK = true ]; then
 				echo "Making symlink for $i..."
-				ln -s "${sorted_folders[$3]}"/$(basename $i) $2
+				ln -s "${sorted_folders[$3]}/`basename "$i"`" "$2"
 				check_sanity $ERR_SORT_LINK
 			fi
 		done
 	done
 }
 
-
 # Make sure directories exist
 
 if [ ! -d "$HOMEDIR/Downloads" ]; then
-	mkdir $HOMEDIR/Downloads
+	mkdir "$HOMEDIR/Downloads"
 fi
 
 for e in "${sorted_folders[@]}"
 do
 	
 	if [ ! -d "$e" ]; then
-		mkdir $e
-		if [ ! "$?" = "0" ]; then
-			check_sanity $ERR_XDG					
-		fi
+		mkdir "$e"
+		check_sanity $ERR_XDG					
 	fi
 
 done
@@ -96,13 +126,12 @@ echo "Orginization started..."
 
 for f in "${target_folders[@]}"
 do
-	ITERATOR=0
+	F_ITERATOR=0
 	for t in "${sort_type[@]}"
 	do
-		sort_folder $t $f $ITERATOR
-		ITERATOR=$[ITERATOR+1]
+		sort_folder $t $f $F_ITERATOR
+		F_ITERATOR=$[F_ITERATOR+1]
 	done
-	echo $f
 done
 
 echo "Orginization completed!"
