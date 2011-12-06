@@ -126,6 +126,7 @@ echo "Orginization started..."
 
 for f in "${target_folders[@]}"
 do
+	echo $f
 	F_ITERATOR=0
 	for t in "${sort_type[@]}"
 	do
