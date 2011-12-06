@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 # organize
 # Sorts your home directory
 
