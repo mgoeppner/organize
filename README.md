@@ -19,3 +19,8 @@ Command line options
 -n                Do not symlink after moving
 
 -d                Do a dry run, will NOT move or symlink files
+
+Want to help?
+================================================================================
+
+Take a look at https://github.com/mgoeppner/organize/issues to see what needs to be done!
