@@ -73,9 +73,13 @@ function sort_folder
 		for i in "${files[@]}"
 		do
 			# Move file
-			echo "Moving $i to ${sorted_folders[$3]}..."
-			mv "$i" "${sorted_folders[$3]}"
-			check_sanity $ERR_SORT_MOVE
+			if [ $DO_MOVE = true ]; then
+				echo "Moving $i to ${sorted_folders[$3]}..."
+				mv "$i" "${sorted_folders[$3]}"
+				check_sanity $ERR_SORT_MOVE
+			else
+				echo "$i will be moved to ${sorted_folders[$3]}..."	
+			fi
 
 			# Symlink file in original directory
 			if [ $DO_SYMLINK = true ]; then
@@ -108,12 +112,20 @@ cd $HOMEDIR
 
 # Parse command line arguments
 DO_SYMLINK=true
+DO_MOVE=true
 
-while getopts ":n" opt; do
+while getopts ":nd" opt; do
 	case $opt in
 		n)
 			DO_SYMLINK=false >&2
 			echo "Symlinking is off..."
+		;;
+		d)
+			DO_SYMLINK=false >&2
+			DO_MOVE=false >&2
+			echo -e "\n!!!!!DRY RUN ONLY!!!!!"
+			echo "No files will be moved or symlinked!"
+			echo -e "!!!!!DRY RUN ONLY!!!!!\n"
 		;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
