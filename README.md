@@ -17,4 +17,5 @@ Command line options
 ================================================================================
 
 -n                Do not symlink after moving
+
 -d                Do a dry run, will NOT move or symlink files
