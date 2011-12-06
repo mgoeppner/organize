@@ -5,8 +5,6 @@ Author:            Mike Goeppner
 
 Website URL:       https://github.com/mgoeppner/organize
 
-License:           http://www.gnu.org/licenses/gpl-3.0.txt
-
 About
 ================================================================================
 
