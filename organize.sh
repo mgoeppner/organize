@@ -114,21 +114,18 @@ cd $HOMEDIR
 DO_SYMLINK=true
 DO_MOVE=true
 
-while getopts ":ndr" opt; do
+while getopts ":nd" opt; do
 	case $opt in
 		n)
-			DO_SYMLINK=false
+			DO_SYMLINK=false >&2
 			echo "Symlinking is off..."
 		;;
 		d)
-			DO_SYMLINK=false
-			DO_MOVE=false
+			DO_SYMLINK=false >&2
+			DO_MOVE=false >&2
 			echo -e "\n!!!!!DRY RUN ONLY!!!!!"
 			echo "No files will be moved or symlinked!"
 			echo -e "!!!!!DRY RUN ONLY!!!!!\n"
-		;;
-		r)
-			DO_RECURSIVE=true
 		;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
