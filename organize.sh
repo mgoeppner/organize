@@ -129,7 +129,7 @@ while getopts ":ndr" opt; do
 		;;
 		r)
 			DO_RECURSIVE=true
-		::
+		;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
 			exit 1
