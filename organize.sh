@@ -22,20 +22,20 @@ function check_sanity
 }
 
 # Configuration
-if [ ! -d "$HOMEDIR/.config/organize" ]; then
+if [ ! -d "$XDG_CONFIG_HOME/organize" ]; then
 	
 	# Make directory
-	mkdir "$HOMEDIR/.config/organize"
+	mkdir "$XDG_CONFIG_HOME/organize"
 	check_sanity $ERR_CONF
 
-	if [ ! -e "$HOMEDIR/.config/organize/organize.conf" ]; then
+	if [ ! -e "$XDG_CONFIG_HOME/organize/organize.conf" ]; then
 	
 		# Create file
-		touch "$HOMEDIR/.config/organize/organize.conf"
+		touch "$XDG_CONFIG_HOME/organize/organize.conf"
 		check_sanity $ERR_CONF_FILE
 
 		# Write default contents
-		echo -e 'PICTURE_DIR="$HOMEDIR/Pictures"\nVIDEO_DIR="$HOMEDIR/Videos"\nMUSIC_DIR="$HOMEDIR/Music"\nDOCUMENT_DIR="$HOMEDIR/Documents"\n\nPICTURE_TYPES="gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf"\nVIDEO_TYPES="mp4;avi;ovg;divx;3g2;3gp;mkv;mov"\nMUSIC_TYPES="mp3;ogg;wav;aac;flac;m4a"\nDOCUMENT_TYPES="doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp"\n' > "$HOMEDIR/.config/organize/organize.conf"
+		echo -e 'PICTURE_DIR="$HOMEDIR/Pictures"\nVIDEO_DIR="$HOMEDIR/Videos"\nMUSIC_DIR="$HOMEDIR/Music"\nDOCUMENT_DIR="$HOMEDIR/Documents"\n\nPICTURE_TYPES="gif;jpg;jpeg;png;tiff;bmp;svg;psd;xcf"\nVIDEO_TYPES="mp4;avi;ovg;divx;3g2;3gp;mkv;mov"\nMUSIC_TYPES="mp3;ogg;wav;aac;flac;m4a"\nDOCUMENT_TYPES="doc;docx;xls;xlsx;ppt;pptx;odt;ods;odp"\n' > "$XDG_CONFIG_HOME/organize/organize.conf"
 		check_sanity $ERR_CONF_FILE	
 	fi				
 fi
