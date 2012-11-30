@@ -20,6 +20,8 @@ Command line options
 
 `-d`                Do a dry run, will NOT move or symlink files
 
+`-c`				Clean the Downloads folder by deleting all contents
+
 Want to help?
 ================================================================================
 

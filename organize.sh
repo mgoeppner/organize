@@ -113,8 +113,9 @@ cd $HOMEDIR
 # Parse command line arguments
 DO_SYMLINK=true
 DO_MOVE=true
+DO_CLEAN=false
 
-while getopts ":nd" opt; do
+while getopts ":ndc" opt; do
 	case $opt in
 		n)
 			DO_SYMLINK=false >&2
@@ -127,6 +128,10 @@ while getopts ":nd" opt; do
 			echo "No files will be moved or symlinked!"
 			echo -e "!!!!!DRY RUN ONLY!!!!!\n"
 		;;
+		c)
+			DO_CLEAN=true >&2
+			echo -e "Downloads folder will be cleaned..."
+		;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
 			exit 1
@@ -136,6 +141,7 @@ done
 
 echo "Orginization started..."
 
+# Organize folders
 for f in "${target_folders[@]}"
 do
 	echo $f
@@ -146,6 +152,15 @@ do
 		F_ITERATOR=$[F_ITERATOR+1]
 	done
 done
+
+# Clean downloads folder
+if [[ $DO_CLEAN = true ]] && [[ $DO_MOVE = true || $DO_SYMLINK = true ]]; then
+	echo "Cleaning Downloads folder..."
+	cd "$HOMEDIR/Downloads"
+	rm -rf ./*
+	echo "Downloads folder cleaned..."
+	cd "$HOMEDIR"
+fi
 
 echo "Orginization completed!"
 
