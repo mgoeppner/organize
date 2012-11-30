@@ -114,23 +114,36 @@ cd $HOMEDIR
 DO_SYMLINK=true
 DO_MOVE=true
 DO_CLEAN=false
+DO_RECURSE=false
+DO_SUBJECT=false
+SORT_SUBJECT=""
 
-while getopts ":ndc" opt; do
+while getopts ":ndcrs:" opt; do
 	case $opt in
 		n)
-			DO_SYMLINK=false >&2
-			echo "Symlinking is off..."
+			DO_SYMLINK=false
+			echo -e "Symlinking disabled..."
 		;;
 		d)
-			DO_SYMLINK=false >&2
-			DO_MOVE=false >&2
+			DO_SYMLINK=false
+			DO_MOVE=false
 			echo -e "\n!!!!!DRY RUN ONLY!!!!!"
 			echo "No files will be moved or symlinked!"
 			echo -e "!!!!!DRY RUN ONLY!!!!!\n"
 		;;
 		c)
-			DO_CLEAN=true >&2
-			echo -e "Downloads folder will be cleaned..."
+			DO_CLEAN=true
+			echo -e "Downloads cleaning enabled..."
+		;;
+		r)
+			DO_RECURSE=true
+			echo -e "Recursion enabled... ***NOT IMPLEMENTED***"
+		;;
+		s)
+			DO_SUBJECT=true
+			DO_SYMLINK=false
+			SORT_SUBJECT=$OPTARG
+			echo -e "Subject sorting enabled for ~/$OPTARG... ***NOT IMPLEMENTED***"
 		;;
 		\?)
 			echo "Invalid option: -$OPTARG" >&2
@@ -139,7 +152,7 @@ while getopts ":ndc" opt; do
 	esac
 done
 
-echo "Orginization started..."
+echo -e "\nOrginization started..."
 
 # Organize folders
 for f in "${target_folders[@]}"
